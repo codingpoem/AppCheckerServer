@@ -30,7 +30,7 @@ globalDB = Database(DBIP, DBPORT, DBNAME)
 
 def extractScreenshots(apk):
 
-    screenshots_dir = os.path.join(apk_static_path, os.path.splitext(os.path.basename(apk))[-2], "screenshots")
+    screenshots_dir = os.path.join(apk_static_path, getSHA1(apk), "screenshots")
     if not os.path.exists(screenshots_dir):
         os.makedirs(screenshots_dir)
     log.info("1, install")
@@ -104,7 +104,7 @@ def extractLocalImg(apk):
     img_extension = [".bmp", ".dib", ".jpeg", ".jpg", ".jpe", ".jp2", ".png", ".webp", ".pbm", ".pgm", ".ppm",
                      ".pxm", ".pnm", ".pfm", ".sr", ".tiff", ".tif", ".exr", ".hdr", ".pic"]
 
-    localImg_dir = os.path.join(apk_static_path, os.path.splitext(os.path.basename(apk))[-2], "localimage")
+    localImg_dir = os.path.join(apk_static_path, getSHA1(apk), "localimage")
     if not os.path.exists(localImg_dir):
         os.makedirs(localImg_dir)
     'A faster method'
