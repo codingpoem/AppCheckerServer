@@ -58,8 +58,15 @@ def getData():
 
     return "error"
 
+screencaps_path = "/home/zdn/work/AppChecker/code/AppCheckerServer/data/statistics/screencaps"
+@app.route('/pic/<picname>', methods=['get'])
+def getPic(picname):
+    pic_path = os.path.join(screencaps_path, picname)
+    if pic_path.exists(pic_path):
+        return  (pic_path)
+    return "file not exist"
 
 
 
 if __name__ == "__main__":
-    app.run(host='127.0.0.1',port=6666)
+    app.run(host='127.0.0.1', port=6666)
