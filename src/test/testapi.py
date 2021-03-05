@@ -12,14 +12,17 @@ def test_upload_apk():
     print(upload_res, upload_res.content)
 
 def test_getdata():
-    response = requests.get("http://127.0.0.1:5000/getdata?page=2&limit=5")
+    response = requests.get("http://127.0.0.1:6666/getdata?page=2&limit=5")
     # response = requests.get("https://www.layui.com/demo/table/user/?page=3&limit=3")
     print(response, response.content)
     # for i in json_util.loads(response.content.decode()):
     #     print(i)
 # {"id":10006,"username":"user-6","sex":"\xe5\xa5\xb3","city":"\xe5\x9f\x8e\xe5\xb8\x82-6","sign":"\xe7\xad\xbe\xe5\x90\x8d-6","experience":982,"logins":37,"wealth":57768166,"classify":"\xe4\xbd\x9c\xe5\xae\xb6","score":34}
+
+
 if __name__ == "__main__":
+    response = requests.get("http://127.0.0.1:6666")
+    print(response, response.content)
 
-
-    test_getdata()
+    # test_getdata()
     # test_upload_apk()

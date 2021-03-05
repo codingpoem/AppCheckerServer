@@ -16,21 +16,14 @@ from src.config.cfg import WORKPATH, DBIP, DBPORT, DBNAME, AAPT, ADB
 logging.basicConfig(stream=sys.stdout, format="%(levelname)s: %(asctime)s: %(message)s", level=logging.DEBUG, datefmt='%a %d %b %Y %H:%M:%S')
 log = logging.getLogger(__name__)
 
-apk_path = "/Users/zdn/work/AppChecker/code/ACPro/acpro/tests/apks"
-# aapt2 = "/Users/zdn/work/AppChecker/code/AppCheckerServer/bin/aapt2"
+apk_path = "/home/zdn/work/AppChecker/data/xingyuan"
 apk_static_path = os.path.join(WORKPATH, "data/apk_static")
-# cfg = ConfigParser()
-# cfg.read("/Users/zdn/work/AppChecker/code/AppCheckerServer/src/config/cfg.ini")
-#
-# ##db
-# dbIP = cfg.get('mongoDB', 'IP')
-# dbPort = int(cfg.get('mongoDB', 'port'))
-# dbName = cfg.get('mongoDB', 'dbName')
+
 globalDB = Database(DBIP, DBPORT, DBNAME)
 
 def extractScreenshots(apk):
 
-    screenshots_dir = os.path.join(apk_static_path, os.path.splitext(os.path.basename(apk))[-2], "screenshots")
+    screenshots_dir = os.path.join(apk_static_path, getSHA1(apk), "screenshots")
     if not os.path.exists(screenshots_dir):
         os.makedirs(screenshots_dir)
     log.info("1, install")
@@ -104,7 +97,7 @@ def extractLocalImg(apk):
     img_extension = [".bmp", ".dib", ".jpeg", ".jpg", ".jpe", ".jp2", ".png", ".webp", ".pbm", ".pgm", ".ppm",
                      ".pxm", ".pnm", ".pfm", ".sr", ".tiff", ".tif", ".exr", ".hdr", ".pic"]
 
-    localImg_dir = os.path.join(apk_static_path, os.path.splitext(os.path.basename(apk))[-2], "localimage")
+    localImg_dir = os.path.join(apk_static_path, getSHA1(apk), "localimage")
     if not os.path.exists(localImg_dir):
         os.makedirs(localImg_dir)
     'A faster method'
@@ -144,15 +137,17 @@ def retireve_info(file_in_check):
     # log_writer(sha1, pkg, cert, dn, vername, appname)
 
     # db_data = {"sha1": None, "pkg": None, "cert": None, "dn": None, "vername": None, "appname": None}
-    db_data = {"sha1": getSHA1(file_in_check), "pkg": pkg, "cert": cert, "dn": dn, "vername": vername, "appname": appname}
+    apktime = file_in_check.split('/')[-2]
+    # print(apktime)
+    db_data = {"sha1": getSHA1(file_in_check), "pkg": pkg, "cert": cert, "dn": dn, "vername": vername, "appname": appname, "apktime":apktime}
     globalDB.insert_one("apk_info", db_data)
 
 def processApk(file_in_check):
     if not re.compile("\.apk$").findall(file_in_check):
-        return "file is not apk"
+        return "file file_in_check is not apk"
 
     if globalDB.db["apk_info"].find_one({"sha1":getSHA1(file_in_check)}):
-        return "database exist"
+        return "file_in_check has in database"
 
     pass
     retireve_info(file_in_check)
@@ -173,4 +168,8 @@ def main():
 
 
 if __name__ == "__main__":
-    main()
+    for root, dirs, files in os.walk(apk_path):
+        for f in files:
+            if re.match("^[^\.].*\.apk$", f):
+                # print(os.path.join(root,f))
+                processApk(os.path.join(root,f))
