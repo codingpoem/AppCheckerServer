@@ -20,9 +20,21 @@ def test_getdata():
 # {"id":10006,"username":"user-6","sex":"\xe5\xa5\xb3","city":"\xe5\x9f\x8e\xe5\xb8\x82-6","sign":"\xe7\xad\xbe\xe5\x90\x8d-6","experience":982,"logins":37,"wealth":57768166,"classify":"\xe4\xbd\x9c\xe5\xae\xb6","score":34}
 
 
-if __name__ == "__main__":
-    response = requests.get("http://127.0.0.1:6666")
+def test_pic_search():
+    response = requests.get("http://127.0.0.1:9999/apk/screencaps/search?picname=ffd709f5da6705c57978f3584b260b58e5d0c0d8_11.png")
+    # response = requests.get("https://www.layui.com/demo/table/user/?page=3&limit=3")
     print(response, response.content)
+
+def test_get_screencaps():
+    response = requests.get("http://127.0.0.1:9999/apk/screencaps?sha1=ffd709f5da6705c57978f3584b260b58e5d0c0d8")
+    # response = requests.get("https://www.layui.com/demo/table/user/?page=3&limit=3")
+    print(response, response.content)
+
+if __name__ == "__main__":
+    # response = requests.get("http://127.0.0.1:9999")
+    # print(response, response.content)
 
     # test_getdata()
     # test_upload_apk()
+    # test_pic_search()
+    test_get_screencaps()
