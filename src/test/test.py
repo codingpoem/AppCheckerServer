@@ -37,9 +37,16 @@ if __name__ == "__main__" :
     # th.start()
     # print("this is main thread")
 
-    getData(2,5)
+    # getData(2,5)
     # getData(2,10)
     # getData(3,10)
+
+    mlist =  ["aa","bb","cc","dd","ee"]
+    print(mlist)
+    # mlist = filter(lambda x:x!="aa", mlist)
+    mlist =  [x for x in mlist if x!="aa"]
+    print(mlist)
+
 
 
 

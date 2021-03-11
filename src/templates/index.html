@@ -26,36 +26,22 @@
 
 <table class="layui-hide" id="test" lay-filter="test"></table>
 
-<fieldset class="layui-elem-field layui-field-title" style="margin-top: 50px;">
-  <legend>图片懒加载</legend>
-</fieldset>
-<div class="site-demo-flow" id="LAY_demo3">
-<!--   <img lay-src="https://gw.alicdn.com/bao/uploaded/i2/701696736/TB2PNl5ahQa61Bjy0FhXXaalFXa_!!701696736.jpg_400x400q90.jpg?t=1615283254210">
-  <img lay-src="https://gw.alicdn.com/bao/uploaded/i2/162734861/TB2V5rsX_gc61BjSZFkXXcTkFXa_!!162734861.jpg_400x400q90.jpg?t=1615283254210">
-  <img lay-src="https://gw.alicdn.com/bao/uploaded/i4/69476562/TB2htq4XTka61BjSszfXXXN8pXa_!!69476562.jpg_400x400q90.jpg?t=1615283254210">
-  <img lay-src="https://gw.alicdn.com/bao/uploaded/i1/180558071/TB2sy6jXMQc61BjSZFGXXa1DFXa_!!180558071.jpg_400x400q90.jpg?t=1615283254210">
-  <img lay-src="https://gw.alicdn.com/bao/uploaded/i2/701696736/TB2PNl5ahQa61Bjy0FhXXaalFXa_!!701696736.jpg_400x400q90.jpg?t=1615283254210">
-  <img lay-src="https://gw.alicdn.com/bao/uploaded/i3/285892163/TB2qu2HX9Zb61BjSZPfXXaU.pXa_!!285892163.jpg_400x400q90.jpg?t=1615283254210">
-  <img lay-src="https://gw.alicdn.com/bao/uploaded/i2/704998060/TB2S.gAXTgc61BjSZFkXXcTkFXa_!!704998060.jpg_400x400q90.jpg?t=1615283254210">
-  <img lay-src="https://gw.alicdn.com/bao/uploaded/i3/117202952/TB25lckX_AX61Bjy0FcXXaSlFXa_!!117202952.jpg_400x400q90.jpg?t=1615283254210">
-  <img lay-src="https://gw.alicdn.com/bao/uploaded/i2/162734861/TB2qijoX9Zb61BjSZPfXXaU.pXa_!!162734861.jpg_400x400q90.jpg?t=1615283254210">
-  <img lay-src="https://gw.alicdn.com/bao/uploaded/i3/96216586/TB2S7EfXHMc61BjSZFFXXaDLFXa_!!96216586.jpg_400x400q90.jpg?t=1615283254210">
-  <img lay-src="https://gw.alicdn.com/bao/uploaded/i8/TB1jSSFNFXXXXcoXFXXYXGcGpXX_M2.SS2_400x400q90.jpg?t=1615283254210">
-  <img lay-src="https://gw.alicdn.com/bao/uploaded/i2/162734861/TB2ylbsX37c61BjSZFKXXb6hFXa_!!162734861.jpg_400x400q90.jpg?t=1615283254210">
-  <img lay-src="https://gw.alicdn.com/bao/uploaded/i2/117202952/TB2FdyZajUd61BjSZPcXXc6hXXa_!!117202952.jpg_400x400q90.jpg?t=1615283254210">
-  <img lay-src="https://gw.alicdn.com/bao/uploaded/i4/777105914/TB2t.qbXZwb61Bjy0FfXXXvlpXa_!!777105914.jpg_400x400q90.jpg?t=1615283254210">
-  <img lay-src="https://gw.alicdn.com/bao/uploaded/i4/TB1XzupNFXXXXcpXXXXXXXXXXXX_!!0-item_pic.jpg_400x400q90.jpg?t=1615283254210">
- --></div>
-
-<div id="pics">this is screencaps</div>
 
 
+  <div class="layui-row">
+    <div class="layui-col-xs6">
+      <div class="grid-demo grid-demo-bg1">apk截图区域</div>
+      <div id="screencaps">this is screencaps</div>
+    </div>
+    <div class="layui-col-xs6">
+	  <div class="grid-demo">milvus检索关联区域</div>
+	    <div id="searchs">this is milvus result</div>
+
+    </div>
+  </div>
 
 
  <script type="text/javascript">
-$(document).ready(function(){
-console.log("this is in jquery");
-});
 
 document.getElementById("hello").onclick = function(){
 	console.log("helloclic");
@@ -86,10 +72,11 @@ document.getElementById("hello").onclick = function(){
 
   	// window.location.href="https://www.baidu.com"
     var data = obj.data;
+    var sha1 = data["sha1"];
     console.log(data["sha1"]);
     console.log("/apk/screencaps?"+data["sha1"]);
-
     console.log(JSON.stringify(data));
+    getApkScreencaps(sha1);//ajax 请求获取应用截图
     
     // layer.alert(JSON.stringify(data), {
     //   title: '当前行数据：'
@@ -97,8 +84,11 @@ document.getElementById("hello").onclick = function(){
     
     // //标注选中样式
     // obj.tr.addClass('layui-table-click').siblings().removeClass('layui-table-click');
+  });
+  
+});
 
-
+function ajaxGet(url, callback){
 	var xmlhttp;
 	if (window.XMLHttpRequest)
 	{
@@ -114,100 +104,97 @@ document.getElementById("hello").onclick = function(){
 	{
 		if (xmlhttp.readyState==4 && xmlhttp.status==200)
 		{	
-			var retstr =  xmlhttp.responseText;
-			var retobj = JSON.parse(retstr)
-			// console.log(retobj["data"]);
-
-			// var parent = document.getElementById("pics");
-			// for(var i=0;i<parent.childNodes.length;i++){
-			// 	parent.removeChild(i)
-			// }
-
-
-			for(var i=0;i<retobj["data"].length;i++){
-				console.log(retobj["data"][i])
-				console.log(retobj["data"][i].split("/")[4])
-				var img=document.createElement("img");
-				img.src=retobj["data"][i];
-				img.height = "600"
-				img.width = "400"
-				img.className = "screencap"
-				picname =  retobj["data"][i].split("/")[4];
-				// img.addEventListener("click", searchpic(picname), false);
-				// img.onclick="searchpic";
-				document.getElementById("LAY_demo3").appendChild(img);
-			}
-			//绑定 事件
-			$(".screencap").click(function(){
-				var src = $(this).attr("src");
-				console.log(src)
-			});
-			// console.log(typeof(ret));
-			// console.log(ret);
-
-
-
+			var result =  xmlhttp.responseText;
+			callback(result);
 		}
 	}
-	xmlhttp.open("get",  "/apk/screencaps?sha1="+data["sha1"], true);
+	xmlhttp.open("get", url, true);
 	xmlhttp.send();
-	// console.log(xmlhttp.responseText);	
+}
 
 
 
-  });
-  
-});
+function getApkScreencaps(sha1)
+{
+	ajaxGet("/apk/screencaps?sha1="+sha1, function(result){
+			console.log(result)
+			var retobj = JSON.parse(result);
+			// console.log(retobj["data"]);
 
 
 
-layui.use('flow', function(){
-  var flow = layui.flow;
- 
-  flow.load({
-    elem: '#LAY_demo1' //流加载容器
-    ,scrollElem: '#LAY_demo1' //滚动条所在元素，一般不用填，此处只是演示需要。
-    ,done: function(page, next){ //执行下一页的回调
-      
-      //模拟数据插入
-      setTimeout(function(){
-        var lis = [];
-        for(var i = 0; i < 8; i++){
-          lis.push('<li>'+ ( (page-1)*8 + i + 1 ) +'</li>')
-        }
-        
-        //执行下一页渲染，第二参数为：满足“加载更多”的条件，即后面仍有分页
-        //pages为Ajax返回的总页数，只有当前页小于总页数的情况下，才会继续出现加载更多
-        next(lis.join(''), page < 10); //假设总页数为 10
-      }, 500);
-    }
-  });
-  
-  flow.load({
-    elem: '#LAY_demo2' //流加载容器
-    ,scrollElem: '#LAY_demo2' //滚动条所在元素，一般不用填，此处只是演示需要。
-    ,isAuto: false
-    ,isLazyimg: true
-    ,done: function(page, next){ //加载下一页
-      //模拟插入
-      setTimeout(function(){
-        var lis = [];
-        for(var i = 0; i < 6; i++){
-          lis.push('<li><img lay-src="//s17.mogucdn.com/p2/161011/upload_279h87jbc9l0hkl54djjjh42dc7i1_800x480.jpg?v='+ ( (page-1)*6 + i + 1 ) +'"></li>')
-        }
-        next(lis.join(''), page < 6); //假设总页数为 6
-      }, 500);
-    }
-  });
-  
-  //按屏加载图片
-  flow.lazyimg({
-    elem: '#LAY_demo3 img'
-    ,scrollElem: '#LAY_demo3' //一般不用设置，此处只是演示需要。
-  });
-  
-});
+			//screencaps下填充apk截图元素
+			$("#screencaps").empty();
+			for(var i=0;i<retobj["data"].length;i++){
+				var img=document.createElement("img");
+				var picname = retobj["data"][i].split("/")[4];	//e5308dc740eebd3758c0f36e7968946d1fe37e44_9.png
+				console.log("ppppp:",picname)
+				img.src=retobj["data"][i];
+				img.height = "400";
+				img.width = "200";
+				img.className = "screencap"
+				// img.addEventListener("click", function(){
+				// 	console.log("screencap click")
+				// 	clickScreencap(picname)
+				// });
+				document.getElementById("screencaps").appendChild(img);
+			}
+			$(".screencap").click(function(){
+				var src  = $(this).attr("src");
+				console.log("sssss",src);
+				clickScreencap(src.split("/")[4]);
 
+			});
+
+	});
+
+}
+
+function clickScreencap(picname){
+	console.log("hhhhhhhh:", picname)
+	ajaxGet("/apk/screencaps/search?picname="+picname, function(result){
+			console.log(result)
+			var retobj = JSON.parse(result);
+			var data = retobj["data"]
+
+			//div searchs下填充milvus关联的图片
+			$("#searchs").empty();
+			for(var i=0;i<data.length;i++){
+				var picurl =  data[i][0];
+				var distance = data[i][1];
+				var img=document.createElement("img");
+				var p=document.createElement("p");
+				var div=document.createElement("div");
+
+				p.innerHTML=distance
+				img.src=picurl;
+				img.height = "500";
+				img.width = "300";
+				// img.addEventListener("mouseover", function(){
+				// 	console.log("screencap click")
+				// 	clickScreencap(picname)
+				// });
+				div.appendChild(img);
+				div.appendChild(p);
+				document.getElementById("searchs").appendChild(div);
+				console.log(data[i])
+			}
+	})
+
+}
+
+
+function clear_screencaps(){
+	var parent = document.getElementById("screencaps");
+	for(var i=0;i<parent.childNodes.length;i++){
+		parent.removeChild(i)
+	}
+
+}
+
+function milvussearch(picname){
+
+}
 
 </script>
 </body>

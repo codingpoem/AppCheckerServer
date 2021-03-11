@@ -21,7 +21,10 @@ def test_getdata():
 
 
 def test_pic_search():
-    response = requests.get("http://127.0.0.1:9999/apk/screencaps/search?picname=ffd709f5da6705c57978f3584b260b58e5d0c0d8_11.png")
+    pic1 = "dbe865c9f81621d40658e4c342d36bde544f727f_1.png"
+    pic2 = "dbe865c9f81621d40658e4c342d36bde544f727f_0.png"
+    pic3 =  "dbe865c9f81621d40658e4c342d36bde544f727f_10.png"
+    response = requests.get("http://127.0.0.1:9999/apk/screencaps/search?picname="+pic1)
     # response = requests.get("https://www.layui.com/demo/table/user/?page=3&limit=3")
     print(response, response.content)
 
@@ -36,5 +39,5 @@ if __name__ == "__main__":
 
     # test_getdata()
     # test_upload_apk()
-    # test_pic_search()
-    test_get_screencaps()
+    test_pic_search()
+    # test_get_screencaps()

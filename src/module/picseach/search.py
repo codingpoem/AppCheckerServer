@@ -6,6 +6,8 @@ from src.module.picseach.preprocessor.vggnet import vgg_extract_feat
 from diskcache import Cache
 
 
+
+#get name  from id in cache.db
 def query_name_from_ids(vids):
     res = []
     cache = Cache(default_cache_dir)

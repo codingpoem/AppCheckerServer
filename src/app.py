@@ -7,6 +7,7 @@ import tensorflow as tf
 
 from configparser import ConfigParser
 
+from flask_cors import CORS
 from keras.applications import VGG16
 from tensorflow.python.keras.backend import set_session
 from flask import Flask, request, send_file, render_template, make_response, jsonify
@@ -45,6 +46,8 @@ def load_model():
                   pooling='max',
                   include_top=False)
 app = Flask(__name__)
+CORS(app)
+
 
 @app.route('/')
 def hello_world():
@@ -99,7 +102,7 @@ def getPic(picname):
 def do_search_api():
     picname = request.args["picname"]
     picpath = os.path.join(DATA_PATH,picname)
-    res_id,res_distance  = do_search("screencaps", picpath, 10, model, graph, sess)
+    res_id,res_distance  = do_search("screencaps", picpath, 10+15, model, graph, sess)
     print(res_id)
     print(res_distance)
     if isinstance(res_id, str):
@@ -107,8 +110,16 @@ def do_search_api():
     imgs_path = [request.url_root +"data/" + x for x in res_id]
     res = dict(zip(imgs_path, res_distance))
     res = sorted(res.items(), key=lambda item: item[1])
-    print(res)
-    return jsonify(res), 200
+    # print("before")
+    # for x in res:
+    #     print(x)
+    res = [ x for x in res if x[0].find(picname.split("_")[0]) == -1 ]
+    res = res[0:10]
+    # print("after")
+    # for x in res:
+    #     print(x)
+    ret = {"data": res}
+    return jsonify(ret), 200
 
 #get apk all screencaps
 @app.route('/apk/screencaps', methods=['get'])
@@ -141,4 +152,4 @@ def test():
 
 if __name__ == "__main__":
     load_model()
-    app.run(host='127.0.0.1', port=9999)
+    app.run(host='0.0.0.0', port=9999)
